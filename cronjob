@@ -1,0 +1,2 @@
+@reboot sleep 100 && python3 /usr/app/src/main.py >> /logfile > /proc/1/fd/1 2>&1
+0 22 * * * python3 /usr/app/src/main.py >> /logfile > /proc/1/fd/1 2>&1

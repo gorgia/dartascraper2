@@ -1,17 +1,23 @@
-from abc import ABC, abstractmethod
+from requests_html import HTMLSession
+from scraper.Scraper import Scraper
+import logging
 
-from singleton_decorator import singleton
+log = logging.getLogger('dartascraper.AsyncCrawler')
 
-from crawler.CrawlerBuilder import CrawlerBuilder
-from crawler.SessionFactory import SessionFactory
 
-@singleton
-class AsyncCrawler(CrawlerBuilder):
+class AsyncCrawler:
 
-    session = SessionFactory.get_async_session()
-    
+    def __init__(self, url, scraper: Scraper):
+        super().__init__()
+        self.session = HTMLSession()
+        self.scraper = scraper
+        self.url = url
 
-    def __init__(self) -> None:
-        self.reset()
+    def run(self) -> object:
+        log.debug("Getting page:" + self.url)
+        result = self.session.get(self.url)
+        html = result.html.html
+        return self.scraper.scrape_data(html)
 
-    def get_crawler(self) -> Crawler:
+
+

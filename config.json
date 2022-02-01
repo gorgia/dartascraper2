@@ -1,0 +1,31 @@
+{
+  "log_level": "DEBUG",
+  "flow": {
+    "scrape_url": false
+  },
+  "selenium": {
+    "scraper": {
+      "default_page_load_wait_time_second": 100,
+      "default_page_load_retry": 3
+    }
+  },
+  "elastic": {
+    "server_url":"https://vpc-dartascraping-3iut753cwro3av6bkfzkhgnh4q.eu-south-1.es.amazonaws.com",
+    "index_name": "borsait"
+  },
+  "sql": {
+    "server_url":"192.168.1.201",
+    "dbname": "Darta",
+    "user": "postgres",
+    "password": "Luglio1985!",
+    "options": "-c search_path=borsait,public"
+  },
+  "save": {
+    "elasticsearch": false,
+    "postgresql": true,
+    "msexcel": false,
+    "msexcel_filepath": "results.xlsx",
+    "csv": false,
+    "csv_filepath": "risultati.csv"
+  }
+}
