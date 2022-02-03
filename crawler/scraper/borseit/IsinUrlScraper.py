@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import logging
-from scraper.Scraper import Scraper
+
+from crawler.scraper.Scraper import Scraper
 
 log = logging.getLogger('pyselscraper.isinscraper')
 

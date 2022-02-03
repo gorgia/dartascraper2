@@ -3,8 +3,8 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
+from crawler.scraper.Scraper import Scraper
 from dataobject.fund_data import FundData
-from scraper.Scraper import Scraper
 
 log = logging.getLogger('dartascraper.FoundDataScaper')
 

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
+
+from sqlalchemy import Integer, Float
 from sqlalchemy.orm import column_property
 from db.db_schema import found_table, found_date_join, data_table
 
@@ -26,6 +28,12 @@ class FundData(object):
     typology: str = '' #field(default_factory='')
     managing_comp: str = '' #field(default_factory='')
     descr: str = ''
+    managing_comm: Float = None
+    morning_star_rate: Integer = None
+    morning_star_sust_rate: Integer = None
+    rsi_index: Integer = None
+    sharp_ratio: Float = None
+    year_volatility : Float = None
 
   #  def generate_id(self):
    #     date_to_be_used = self.date if self.date else date.today()

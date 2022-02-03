@@ -3,7 +3,7 @@ import sys
 
 from config import config
 from crawler.AsyncCrawler import AsyncCrawler
-from crawler.scraper.FundDataScraper import FundDataScraper
+from crawler.scraper.borseit.FundDataScraper import FundDataScraper
 from dataobject.fund_data import FundData
 from db import postgres_sql
 from datetime import datetime
