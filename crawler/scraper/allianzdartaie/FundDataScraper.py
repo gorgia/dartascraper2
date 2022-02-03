@@ -2,7 +2,6 @@ import logging
 from datetime import datetime, date
 
 from bs4 import BeautifulSoup
-from sqlalchemy import Integer
 import re
 
 from crawler.scraper.Scraper import Scraper
@@ -47,7 +46,7 @@ class FundDataScraper(Scraper):
             fund_data.managing_comp = linea.find_next('td', attrs={'data-label': 'Brand Asset Manager'}).text
             fund_data.close = float(linea.find_next('td', attrs={'data-label': 'Ultima quotazione'}).text)
             fund_data.managing_comm = float(linea.find_next('td', attrs={'data-label': 'Commissione di gestione'}).text.strip('%'))
-            fund_data.var_perc = float(linea.find_next('td', attrs={'data-label': '%VAR'}).text.strip('%'))
+            fund_data.performance1d = float(linea.find_next('td', attrs={'data-label': '%VAR'}).text.strip('%'))
             fund_data.rsi_index = num_or_null(linea.find_next('td', attrs={'data-label': 'Indice RSI'}).text)
             fund_data.morning_star_rate = num_or_null(linea.find_next('td', attrs=
             {'data-label': lambda x: x and "Morningstar Rating" in x}).text)
@@ -58,8 +57,6 @@ class FundDataScraper(Scraper):
             fund_data.performance5y = linea.find_next('td', attrs={'data-label': '5 anni - Ann.ti'}).text
             fund_data.sharp_ratio = linea.find_next('td', attrs={'data-label': 'Indice Sharpe'}).text
             fund_data.year_volatility = linea.find_next('td', attrs={'data-label': 'Volatilità'}).text
-
-
             funds_data.append(fund_data)
         return funds_data
 

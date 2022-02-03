@@ -1,8 +1,9 @@
+from dataclasses import dataclass
+from datetime import date
+
+
 @dataclass
 class FundData(object):
-    __table__ = found_date_join
-    id = column_property(found_table.c.isin, data_table.c.isin_id)
-    isin_id = found_table.c.isin
 
     isin: str = '' #field(default_factory='')
     title: str = ''
