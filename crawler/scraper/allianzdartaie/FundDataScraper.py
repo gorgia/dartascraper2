@@ -40,23 +40,28 @@ class FundDataScraper(Scraper):
         linee = tabella.find_all('tr')
         funds_data = []
         for linea in linee:
-            fund_data = FundData()
-            fund_data.date = last_update_date
-            fund_data.isin = linea.find_next('td', attrs={'data-label': 'ISIN sottostante'}).text
-            fund_data.managing_comp = linea.find_next('td', attrs={'data-label': 'Brand Asset Manager'}).text
-            fund_data.close = float(linea.find_next('td', attrs={'data-label': 'Ultima quotazione'}).text)
-            fund_data.managing_comm = float(linea.find_next('td', attrs={'data-label': 'Commissione di gestione'}).text.strip('%'))
-            fund_data.performance1d = float(linea.find_next('td', attrs={'data-label': '%VAR'}).text.strip('%'))
-            fund_data.rsi_index = num_or_null(linea.find_next('td', attrs={'data-label': 'Indice RSI'}).text)
-            fund_data.morning_star_rate = num_or_null(linea.find_next('td', attrs=
-            {'data-label': lambda x: x and "Morningstar Rating" in x}).text)
-            fund_data.morning_star_sust_rate = num_or_null(linea.find_next('td', attrs=
-            {'data-label': lambda x: x and "Morningstar Sustainability" in x}).text)
-            fund_data.performance_start_of_the_year = linea.find_next('td', attrs={'data-label': 'Rendimenti YTD'}).text
-            fund_data.performance3y = linea.find_next('td', attrs={'data-label': '3 anni - Ann.ti'}).text
-            fund_data.performance5y = linea.find_next('td', attrs={'data-label': '5 anni - Ann.ti'}).text
-            fund_data.sharp_ratio = linea.find_next('td', attrs={'data-label': 'Indice Sharpe'}).text
-            fund_data.year_volatility = linea.find_next('td', attrs={'data-label': 'Volatilità'}).text
-            funds_data.append(fund_data)
+            try:
+                fund_data = FundData()
+                fund_data.isin = linea.find_next('td', attrs={'data-label': 'ISIN sottostante'}).text
+                if fund_data.isin == 'n.d.' or not len(fund_data.isin) > 0:
+                    continue
+                fund_data.date = last_update_date
+                fund_data.managing_comp = linea.find_next('td', attrs={'data-label': 'Brand Asset Manager'}).text
+                fund_data.close = float(linea.find_next('td', attrs={'data-label': 'Ultima quotazione'}).text)
+                fund_data.managing_comm = float(linea.find_next('td', attrs={'data-label': 'Commissione di gestione'}).text.strip('%'))
+                fund_data.performance1d = float(linea.find_next('td', attrs={'data-label': '%VAR'}).text.strip('%'))
+                fund_data.rsi_index = num_or_null(linea.find_next('td', attrs={'data-label': 'Indice RSI'}).text)
+                fund_data.morning_star_rate = num_or_null(linea.find_next('td', attrs=
+                {'data-label': lambda x: x and "Morningstar Rating" in x}).text)
+                fund_data.morning_star_sust_rate = num_or_null(linea.find_next('td', attrs=
+                {'data-label': lambda x: x and "Morningstar Sustainability" in x}).text)
+                fund_data.performance_start_of_the_year = linea.find_next('td', attrs={'data-label': 'Rendimenti YTD'}).text
+                fund_data.performance3y = linea.find_next('td', attrs={'data-label': '3 anni - Ann.ti'}).text
+                fund_data.performance5y = linea.find_next('td', attrs={'data-label': '5 anni - Ann.ti'}).text
+                fund_data.sharp_ratio = linea.find_next('td', attrs={'data-label': 'Indice Sharpe'}).text
+                fund_data.year_volatility = linea.find_next('td', attrs={'data-label': 'Volatilità'}).text
+                funds_data.append(fund_data)
+            except Exception as exc:
+                print(exc)
         return funds_data
 

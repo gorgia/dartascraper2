@@ -42,23 +42,27 @@ def save_funds(fund_data_list):
 
 def upsert_found(found: FundData, cursor):
     sql = """INSERT INTO fund
-                (isin, title, descr, managing_comp, currency)
-                VALUES(%s, %s, %s, %s, %s)
+                (isin, title, descr, managing_comp, currency, 
+                typology, ms_star, ms_sust, managing_comm)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (isin)
                 DO NOTHING"""
     cursor.execute(sql, (found.isin, found.title, found.descr, found.managing_comp, found.currency))
 
 
-def upsert_found_data(found: FundData, cursor):
+def upsert_found_data(fund: FundData, cursor):
     sql = """INSERT INTO fund_quote
                 (isin_id, date, performance1m, performance6m, performance_start_of_the_year,
-                 performance1y, performance3y, performance5y, close, performance1d)
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                 performance1y, performance3y, performance5y, close, performance1d, 
+                  rsi_index, sharp_ratio, year_volatility)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (isin_id, date)
                 DO NOTHING"""
-    cursor.execute(sql, (found.isin, found.date, found.performance1m,
-                         found.performance6m, found.performance_start_of_the_year,
-                         found.performance1y, found.performance3y, found.performance5y, found.close, found.var_perc))
+    cursor.execute(sql, (fund.isin, fund.date, fund.performance1m,
+                         fund.performance6m, fund.performance_start_of_the_year,
+                         fund.performance1y, fund.performance3y, fund.performance5y, fund.close, fund.var_perc,
+                         fund.morning_star_rate, fund.morning_star_sust_rate, fund.rsi_index, fund.sharp_ratio,
+                         fund.year_volatility))
 
 
 def upsert_found_data_url(isin: str, url: str, domain: str, last_update: datetime.date, cursor):

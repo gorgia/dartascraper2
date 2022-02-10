@@ -1,26 +1,36 @@
 from dataclasses import dataclass
 from datetime import date
 
+from sqlalchemy import Integer
+
 
 @dataclass
 class FundData(object):
 
-    isin: str = '' #field(default_factory='')
-    title: str = ''
-    graph_image_src: str = '' #field(default_factory='')
-    performance1m: float = -100.0 #field(default_factory=0.0)
-    performance6m: float = -100.0 #field(default_factory=0.0)
-    performance_start_of_the_year: float = -100.0 #field(default_factory=0.0)
-    performance1y: float = -100.0 #field(default_factory=0.0)
-    performance3y: float = -100.0 #field(default_factory=0.0)
-    performance5y: float = -100.0 #field(default_factory=0.0)
-    date: date = date.today() #field(default_factory=date(1970, 1, 1))
-    close: float = -100.0 #field(default_factory=0.0)
-    var_perc: float = -100.0 #field(default_factory=0.0)
-    currency: str = '' #field(default_factory='')
-    typology: str = '' #field(default_factory='')
-    managing_comp: str = '' #field(default_factory='')
-    descr: str = ''
+    isin: str
+    title: str
+    graph_image_src: str
+    performance1m: float
+    performance6m: float
+    performance_start_of_the_year: float
+    performance1y: float
+    performance3y: float
+    performance5y: float
+    date: date
+    close: float
+    var_perc: float
+    currency: str
+    typology: str
+    managing_comp: str
+    descr: str
+    morning_star_rate: int
+    morning_star_sust_rate: int
+    rsi_index: int
+    sharp_ratio: int
+    year_volatility: int
+    managing_comm: float
+
+
 
     #  def generate_id(self):
     #     date_to_be_used = self.date if self.date else date.today()
