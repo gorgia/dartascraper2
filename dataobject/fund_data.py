@@ -13,27 +13,28 @@ class FundData(object):
     isin_id = found_table.c.isin
 
     isin: str = '' #field(default_factory='')
-    title: str = ''
-    graph_image_src: str = '' #field(default_factory='')
-    performance1m: float = -100.0 #field(default_factory=0.0)
-    performance6m: float = -100.0 #field(default_factory=0.0)
-    performance_start_of_the_year: float = -100.0 #field(default_factory=0.0)
-    performance1y: float = -100.0 #field(default_factory=0.0)
-    performance3y: float = -100.0 #field(default_factory=0.0)
-    performance5y: float = -100.0 #field(default_factory=0.0)
+    title: str = None
+    graph_image_src: str = None #field(default_factory='')
+    performance1m: float = None #field(default_factory=0.0)
+    performance6m: float = None #field(default_factory=0.0)
+    performance_start_of_the_year: float = None #field(default_factory=0.0)
+    performance1y: float = None #field(default_factory=0.0)
+    performance3y: float = None #field(default_factory=0.0)
+    performance5y: float = None #field(default_factory=0.0)
     date: date = date.today() #field(default_factory=date(1970, 1, 1))
-    close: float = -100.0 #field(default_factory=0.0)
-    var_perc: float = -100.0 #field(default_factory=0.0)
-    currency: str = '' #field(default_factory='')
-    typology: str = '' #field(default_factory='')
-    managing_comp: str = '' #field(default_factory='')
-    descr: str = ''
-    managing_comm: Float = None
-    morning_star_rate: Integer = None
-    morning_star_sust_rate: Integer = None
-    rsi_index: Integer = None
-    sharp_ratio: Float = None
-    year_volatility : Float = None
+    close: float = None #field(default_factory=0.0)
+    performance1d: float = None #field(default_factory=0.0)
+    currency: str = None #field(default_factory='')
+    typology: str = None #field(default_factory='')
+    managing_comp: str = None #field(default_factory='')
+    descr: str = None
+    site: str = None
+    managing_comm: float = None
+    morning_star_rate: int = None
+    morning_star_sust_rate: int = None
+    rsi_index: int = None
+    sharp_ratio: float = None
+    year_volatility: float = None
 
   #  def generate_id(self):
    #     date_to_be_used = self.date if self.date else date.today()
@@ -51,11 +52,17 @@ class FundData(object):
             'performance5y': self.performance5y,
             'date': self.date,
             'close': self.close,
-            'var_perc': self.var_perc,
+            'var_perc': self.performance1d,
             'isin': self.isin,
             'currency': self.currency,
             'typology': self.typology,
-            'managing_comp': self.managing_comp
+            'managing_comp': self.managing_comp,
+            'morning_star_rate': self.morning_star_rate,
+            'morning_star_sust_rate': self.morning_star_sust_rate,
+            'rsi_index': self.rsi_index,
+            'sharp_ratio': self.sharp_ratio,
+            'year_volatility': self.year_volatility,
+            'site': self.site
         }
 
 

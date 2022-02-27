@@ -10,7 +10,6 @@ from dataobject.fund_data import FundData
 log = logging.getLogger('dartascraper.FoundDataScaper')
 
 
-
 def scrape_date(soup_page: BeautifulSoup) -> date:
     text = soup_page.find('span', class_=['last-update']).text
     text = text.replace('Dati aggiornati al ', '')
@@ -31,37 +30,47 @@ def num_or_null(text: str):
         return None
 
 
-class FundDataScraper(Scraper):
+def float_or_null(text: str):
+    if text is None or len(text) == 0 or 'n.d.' in text:
+        return None
+    text = text.strip('%').replace(',', '.')
+    return float(text)
 
+
+class FundDataScraper(Scraper):
     def scrape_data(self, html):
         soup_page = BeautifulSoup(html, "lxml")
         tabella = soup_page.find('table', class_=['tabella'])
         last_update_date = scrape_date(soup_page)
-        linee = tabella.find_all('tr')
+        lines = tabella.find_all('tr')
         funds_data = []
-        for linea in linee:
+        log.debug(f"the table has {len(lines)} lines of data")
+        linecount = 0
+        for line in lines:
             try:
+                linecount = linecount + 1
                 fund_data = FundData()
-                fund_data.isin = linea.find_next('td', attrs={'data-label': 'ISIN sottostante'}).text
-                if fund_data.isin == 'n.d.' or not len(fund_data.isin) > 0:
+                fund_data.isin = line.find_next('td', attrs={'data-label': 'ISIN sottostante'}).text[0:12]
+                if 'n.d.' in fund_data.isin or not len(fund_data.isin) > 0:
                     continue
                 fund_data.date = last_update_date
-                fund_data.managing_comp = linea.find_next('td', attrs={'data-label': 'Brand Asset Manager'}).text
-                fund_data.close = float(linea.find_next('td', attrs={'data-label': 'Ultima quotazione'}).text)
-                fund_data.managing_comm = float(linea.find_next('td', attrs={'data-label': 'Commissione di gestione'}).text.strip('%'))
-                fund_data.performance1d = float(linea.find_next('td', attrs={'data-label': '%VAR'}).text.strip('%'))
-                fund_data.rsi_index = num_or_null(linea.find_next('td', attrs={'data-label': 'Indice RSI'}).text)
-                fund_data.morning_star_rate = num_or_null(linea.find_next('td', attrs=
-                {'data-label': lambda x: x and "Morningstar Rating" in x}).text)
-                fund_data.morning_star_sust_rate = num_or_null(linea.find_next('td', attrs=
-                {'data-label': lambda x: x and "Morningstar Sustainability" in x}).text)
-                fund_data.performance_start_of_the_year = linea.find_next('td', attrs={'data-label': 'Rendimenti YTD'}).text
-                fund_data.performance3y = linea.find_next('td', attrs={'data-label': '3 anni - Ann.ti'}).text
-                fund_data.performance5y = linea.find_next('td', attrs={'data-label': '5 anni - Ann.ti'}).text
-                fund_data.sharp_ratio = linea.find_next('td', attrs={'data-label': 'Indice Sharpe'}).text
-                fund_data.year_volatility = linea.find_next('td', attrs={'data-label': 'Volatilità'}).text
+                fund_data.managing_comp = line.find_next('td', attrs={'data-label': 'Brand Asset Manager'}).text
+                fund_data.close = float_or_null(line.find_next('td', attrs={'data-label': 'Ultima quotazione'}).text)
+                fund_data.managing_comm = float_or_null(
+                    line.find_next('td', attrs={'data-label': 'Commissione di gestione'}).text)
+                fund_data.typology = line.find_next('td', attrs={'data-label': 'Categorie'}).text
+                fund_data.performance1d = float_or_null(line.find_next('td', attrs={'data-label': '%VAR'}).text)
+                fund_data.rsi_index = num_or_null(line.find_next('td', attrs={'data-label': 'Indice RSI'}).text)
+                fund_data.morning_star_rate = num_or_null(line.find_next('td', attrs={'data-label': lambda x: x and "Morningstar Rating" in x}).text)
+                fund_data.morning_star_sust_rate = num_or_null(line.find_next('td', attrs={'data-label': lambda x: x and "Morningstar Sustainability" in x}).text)
+                fund_data.performance_start_of_the_year = float_or_null(line.find_next('td', attrs={'data-label': 'Rendimenti YTD'}).text)
+                fund_data.performance3y = float_or_null(line.find_next('td', attrs={'data-label': '3 anni - Ann.ti'}).text)
+                fund_data.performance5y = float_or_null(line.find_next('td', attrs={'data-label': '5 anni - Ann.ti'}).text)
+                fund_data.sharp_ratio = float_or_null(line.find_next('td', attrs={'data-label': 'Indice Sharpe'}).text)
+                fund_data.year_volatility = float_or_null(line.find_next('td', attrs={'data-label': 'Volatilità'}).text)
+                fund_data.site = 'allianzadartaie'
                 funds_data.append(fund_data)
-            except Exception as exc:
-                print(exc)
+            except Exception as exception:
+                log.error(f"Error occurred at line {linecount}")
+                log.error(exception)
         return funds_data
-

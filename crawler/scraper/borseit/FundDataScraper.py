@@ -39,7 +39,7 @@ class FundDataScraper(Scraper):
     def scrape_descr(self, fund_data: FundData):
         descrs = self.soup_page.find_all('li', class_='descr')  # self.webdriver.find_elements_by_class_name("descr")
         fund_data.close = get_float_data(descrs[0].text, "close")
-        fund_data.var_perc = get_float_data(descrs[1].text, "var_perc")
+        fund_data.performance1d = get_float_data(descrs[1].text, "var_perc")
         fund_data.managing_comp = str(descrs[2].text)
         fund_data.isin = str(descrs[3].text)
         if fund_data.isin: fund_data.isin = fund_data.isin.strip()
@@ -54,6 +54,7 @@ class FundDataScraper(Scraper):
             get_float_data(descrs[10].text, "performance_start_of_the_year")
         fund_data.performance3y = get_float_data(descrs[11].text, "performance3y")
         fund_data.performance5y = get_float_data(descrs[12].text, "performance5y")
+        fund_data.site = 'borseit'
 
     def scrape_img(self, fund_data: FundData):
         image_el = self.soup_page.find('img', class_='c-chart-img')
