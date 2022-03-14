@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.9.10-buster
 LABEL Maintainer="gorgia@fastwebnet.it"
 
 WORKDIR /usr/app/src
