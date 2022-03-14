@@ -38,7 +38,7 @@ def crawl_borseit() -> Iterable:
 
 def crawl_allianzdartaie() -> Iterable:
     url = 'https://news.allianzdarta.ie/darta-easy-selection/'
-    crawler = AtomicSyncCrawler(url, AllianzDartaFundDataScraper(), enable_js=5)
+    crawler = AtomicSyncCrawler(url, AllianzDartaFundDataScraper(), enable_js=True)
     allianzdartaie_fund_datas = crawler.run()
     return allianzdartaie_fund_datas
 

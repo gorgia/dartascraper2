@@ -10,7 +10,7 @@ log = logging.getLogger('dartascraper.AsyncCrawler')
 
 class AtomicSyncCrawler:
 
-    def __init__(self, url, scraper: Scraper, enable_js=0):
+    def __init__(self, url, scraper: Scraper, enable_js=False):
         super().__init__()
         self.scraper = scraper
         self.url = url
@@ -24,8 +24,8 @@ class AtomicSyncCrawler:
             try:
                 with HTMLSession() as s:
                     with s.get(self.url) as r:
-                        if self.enable_js > 0:
-                            r.html.render(sleep=self.enable_js, timeout=20)
+                        if self.enable_js:
+                            r.html.render(sleep=2, timeout=120)
                         htmltext = r.html.html
             except Exception as e:
                 log.warning(str(e))
