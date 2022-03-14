@@ -37,7 +37,7 @@ def float_or_null(text: str):
     return float(text)
 
 
-class FundDataScraper(Scraper):
+class AllianzDartaFundDataScraper(Scraper):
     def scrape_data(self, html):
         soup_page = BeautifulSoup(html, "lxml")
         tabella = soup_page.find('table', class_=['tabella'])

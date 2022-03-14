@@ -22,8 +22,9 @@ class IsinUrlScraper(Scraper):
             log.info("ISIN NOT FOUND")
             return
         else:
-            ccell_element = soup_page.find("div", {"id": self.isin})
+            ccell_element = soup_page.find("div", id=lambda x: x and "descrizione_donotchange" in x)
+            #ccell_element = soup_page.find("div", {"id": self.isin})
             a_element = ccell_element.find('a', href=True)
             href = a_element["href"]
-            log.info("isin " + self.isin + " found! url is:\n" + href)
+            log.info("isin found! url is:\n" + href)
             return href

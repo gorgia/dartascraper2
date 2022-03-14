@@ -19,7 +19,7 @@ def get_float_data(text, item_descr=None):
         log.debug("No value found for " + item_descr)
 
 
-class FundDataScraper(Scraper):
+class BorseitFundDataScraper(Scraper):
 
     def __init__(self):
         self.soup_page = None
@@ -42,7 +42,8 @@ class FundDataScraper(Scraper):
         fund_data.performance1d = get_float_data(descrs[1].text, "var_perc")
         fund_data.managing_comp = str(descrs[2].text)
         fund_data.isin = str(descrs[3].text)
-        if fund_data.isin: fund_data.isin = fund_data.isin.strip()
+        if fund_data.isin:
+            fund_data.isin = fund_data.isin.strip()
         fund_data.date = datetime.strptime(str(descrs[4].text), '%d/%m/%Y').date()
         fund_data.currency = str(descrs[5].text)
         fund_data.typology = str(descrs[6].text)

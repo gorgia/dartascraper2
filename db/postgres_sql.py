@@ -40,14 +40,15 @@ def save_funds(fund_data_list):
         log.exception(e)
 
 
-def get_new_isin():
+def get_new_isin() -> list:
     with get_db_connection() as conn:
         with conn.cursor() as cr:
             sql = "SELECT isin FROM borsait.fund f WHERE  NOT EXISTS ( " \
                   "SELECT FROM   borsait.fund_url WHERE  isin = f.isin)"
             cr.execute(sql)
             tmp = cr.fetchall()
-            return tmp
+            result_list = [x[0] for x in tmp]
+            return result_list
 
 
 def upsert_fund(fund: FundData, cursor):
@@ -78,20 +79,24 @@ def upsert_fund_data(fund: FundData, cursor):
                          fund.sharp_ratio, fund.rsi_index, fund.year_volatility, fund.site))
 
 
-def upsert_found_data_url(isin: str, url: str, domain: str, last_update: datetime.date, cursor):
-    sql = """INSERT INTO fund_url
-                (isin, url, domain, last_update
-                VALUES(%s, %s, %s, %s)
-                ON CONFLICT (isin, last_update)
-                DO NOTHING"""
-    cursor.execute(sql, (isin, url, domain, last_update))
+def upsert_found_data_url(isin: str, url: str, domain: str, last_update=datetime.date.today(), cursor=None):
+    if cursor is None:
+        cursor = get_db_connection().cursor()
+    with cursor as cr:
+        sql = """INSERT INTO fund_url as fu
+                    (isin, url, domain, last_update)
+                    VALUES(%s, %s, %s, %s)
+                    ON CONFLICT (isin, domain)
+                    DO UPDATE SET
+                    url = excluded.url, last_update = excluded.last_update"""
+        cr.execute(sql, (isin, url, domain, last_update))
 
 
 def get_all_urls_and_domains_tuple_list():
     with get_db_connection() as conn:
         with conn.cursor() as cr:
             sql = """SELECT * FROM borsait.fund_url
-                    ORDER BY isin ASC, domain ASC """
+                    ORDER BY isin ASC"""
             cr.execute(sql)
             tmp = cr.fetchall()
 
