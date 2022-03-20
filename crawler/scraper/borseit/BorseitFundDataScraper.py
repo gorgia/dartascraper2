@@ -32,7 +32,7 @@ class BorseitFundDataScraper(Scraper):
             self.scrape_descr(fund_data)
             self.scrape_img(fund_data)
         except Exception as e:
-            log.error("unable to scrape data", e)
+            log.error(f"unable to scrape data, html is:\n{html}", e)
         return fund_data
 
     def scrape_title(self, fund_data: FundData):
