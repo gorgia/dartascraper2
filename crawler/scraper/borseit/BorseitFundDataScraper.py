@@ -27,9 +27,12 @@ class BorseitFundDataScraper(Scraper):
     def scrape_data(self, html):
         self.soup_page = BeautifulSoup(html, "lxml")
         fund_data = FundData()
-        self.scrape_title(fund_data)
-        self.scrape_descr(fund_data)
-        self.scrape_img(fund_data)
+        try:
+            self.scrape_title(fund_data)
+            self.scrape_descr(fund_data)
+            self.scrape_img(fund_data)
+        except Exception as e:
+            log.error("unable to scrape data", e)
         return fund_data
 
     def scrape_title(self, fund_data: FundData):
